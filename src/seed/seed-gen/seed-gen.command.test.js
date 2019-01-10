@@ -8,7 +8,7 @@ const { assert } = chai
 
 describe('seed:gen command', () => {
   it('should log some output from result', async () => {
-    // when ... we call the seed:gen command
+    // when ... we call the seed gen command
     const result = await spawnSync('node', ['src/index.js', 'seed', 'gen'])
 
     // then ... should log some output from result
