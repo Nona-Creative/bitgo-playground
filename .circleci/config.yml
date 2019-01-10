@@ -1,0 +1,81 @@
+version: 2
+
+# --------------------------------
+# common : base
+# --------------------------------
+
+base_node: &base_node
+  docker:
+    - image: circleci/node:8.10.0-browsers
+
+# --------------------------------
+# common : steps
+# --------------------------------
+
+step_cache_restore_npm: &step_cache_restore_npm
+  name: 'Restore Cache: NPM Dependencies'
+  keys:
+    - node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+    - node-v1-{{ .Branch }}-
+    - node-v1-
+
+step_cache_save_npm: &step_cache_save_npm
+  name: 'Save Cache: NPM Dependencies'
+  paths:
+    - ~/usr/local/lib/node_modules  # location depends on npm version
+  key: node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+
+step_run_node_env_info: &step_run_node_env_info
+  name: 'Print Environment Info'
+  command: |
+    . ./.circleci/utils.sh
+    print_heading "environment versions:"
+    print_os_versions
+    print_node_versions
+    print_docker_versions
+
+step_run_install_npm_dependencies: &step_run_install_npm_dependencies
+  name: 'Install NPM Dependencies'
+  shell: /bin/bash
+  command: |
+    npm install
+
+step_lint_js: &step_lint_js
+  name: 'Lint JS'
+  command: |
+    npm run lint:js
+
+step_test_cov: &step_test_cov
+  name: 'All Tests Coverage'
+  command: |
+    npm run test:cov
+
+# --------------------------------
+# jobs
+# --------------------------------
+
+jobs:
+  pull-request-job:
+    <<: *base_node
+    steps:
+      - checkout
+      - restore_cache: *step_cache_restore_npm
+      - run: *step_run_node_env_info
+      - run: *step_run_install_npm_dependencies
+      - save_cache: *step_cache_save_npm
+      - run: *step_lint_js
+      - run: *step_test_cov
+
+# --------------------------------
+# workflows
+# --------------------------------
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - pull-request-job:
+          filters:
+            branches:
+              ignore:
+                - master
