@@ -24,7 +24,8 @@ init project (will just copy ``.env.local`` to ``.env``):
 npm run init
 ```
 
-### Usage
+Usage
+---
 
 For the CLI help run:
 ```bash
@@ -37,7 +38,7 @@ Generate seed for use with BitGo keychain create
 [BitGo docs](https://www.bitgo.com/api/v2/?javascript#create-keychain)
 
 ```bash
-node src/index.js seed:gen
+node src/index.js seed gen
 ```
 
 will output mnemonic phrase and the seed Buffer, which you can use to compare when using ``seed:regen``.
@@ -48,7 +49,7 @@ will output mnemonic phrase and the seed Buffer, which you can use to compare wh
 Regenerate same seed from mnemonic phrase
 
 ```bash
-node src/index.js seed:regen --phrase '<YOUR PHRASE>'
+node src/index.js seed regen --phrase '<MNEMONIC PHRASE>'
 ```
 
 Compare the seed Buffer with that return from ``seed:gen``, it should be the same.
