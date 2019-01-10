@@ -7,7 +7,7 @@ const commandYargs = () => yargs
   .option('phrase', {
     alias: 'p',
     description: 'mnemonic phrase to regenerate seed',
-    type: 'string'
+    type: 'string',
   })
   .help()
   .alias('h', 'help')
@@ -16,5 +16,5 @@ module.exports = [
   'regen',
   'regen commands',
   commandYargs,
-  ({ phrase }) => CommandEffects.regenerateSeedAndLog(phrase)
+  ({ phrase }) => CommandEffects.regenerateSeedAndLog(phrase),
 ]

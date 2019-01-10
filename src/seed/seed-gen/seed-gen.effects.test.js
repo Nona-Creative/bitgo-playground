@@ -1,6 +1,5 @@
 const { assert } = require('chai')
 const sinon = require('sinon')
-const unorm = require('unorm')
 
 const SUT = require('./seed-gen.effects')
 
@@ -23,9 +22,9 @@ describe('seed:gen effects', () => {
       SUT.generateSeedAndLog()
 
       // then ... should log it as expected
-      assert.match(logStub.args[0][0], /^mnemonic\: /)
+      assert.match(logStub.args[0][0], /^mnemonic: /)
       assert.equal(logStub.args[0][0].split(' ').length, 13)
-      assert.match(logStub.args[1][0], /^seed\: 64 bytes/)
+      assert.match(logStub.args[1][0], /^seed: 64 bytes/)
       assert.isTrue(Buffer.isBuffer(logStub.args[2][0]))
     })
   })

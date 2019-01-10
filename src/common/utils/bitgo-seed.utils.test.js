@@ -3,6 +3,7 @@ const BitGo = require('bitgo')
 
 const SUT = require('./bitgo-seed.utils')
 
+/* eslint-disable max-len */
 describe('BitGo seed utils', () => {
   describe('generateSeed', () => {
     it('should generate a new seed comprising mnemonic phrase and byte array required by BitGo', () => {
@@ -43,3 +44,4 @@ describe('BitGo seed utils', () => {
     })
   })
 })
+/* eslint-enable max-len */

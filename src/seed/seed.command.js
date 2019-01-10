@@ -1,4 +1,3 @@
-const R = require('ramda')
 const yargs = require('yargs')
 
 const { command: seedGenCommand } = require('./seed-gen')

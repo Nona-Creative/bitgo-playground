@@ -12,6 +12,6 @@ describe('seed:gen command', () => {
     const result = await spawnSync('node', ['src/index.js', 'seed', 'gen'])
 
     // then ... should log some output from result
-    assert.isTrue(result.stdout.toString().length > 0 )
+    assert.isTrue(result.stdout.toString().length > 0)
   })
 })
