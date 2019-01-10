@@ -6,8 +6,7 @@
   "functions": 100,
   "branches": 100,
   "include": [
-     "src/**/*.utils.js",
-     "src/common/effects/bitgo-seed.effects.js"
+     "src/common/**/*.effects.js"
   ],
   "exclude": [],
   "all": true

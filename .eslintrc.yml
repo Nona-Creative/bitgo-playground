@@ -24,3 +24,5 @@ rules:
     - always-multiline
   operator-linebreak:
     - off
+  object-curly-newline:
+    - off

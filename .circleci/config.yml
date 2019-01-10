@@ -46,9 +46,14 @@ step_lint_js: &step_lint_js
     npm run lint:js
 
 step_test_cov: &step_test_cov
-  name: 'All Tests Coverage'
+  name: 'Unit Tests Coverage'
   command: |
     npm run test:cov
+
+step_e2e_test_cov: &step_e2e_test_cov
+  name: 'E2E Tests Coverage'
+  command: |
+    npm run test:e2e:cov
 
 # --------------------------------
 # jobs
@@ -65,6 +70,7 @@ jobs:
       - save_cache: *step_cache_save_npm
       - run: *step_lint_js
       - run: *step_test_cov
+      - run: *step_e2e_test_cov
 
 # --------------------------------
 # workflows
