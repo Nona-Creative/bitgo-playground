@@ -49,13 +49,12 @@ describe('BitGo keychain effects', () => {
 
       // then
       // ... should return a backup keychain with private and public keys
-      assert.hasAllKeys(result, ['id', 'pub', 'prv', 'ethAddress', 'source', 'users'])
+      assert.hasAllKeys(result, ['id', 'pub', 'prv', 'ethAddress', 'source'])
       assert.match(result.pub, /^xpub(\w{107})$/)
       assert.match(result.prv, /^xprv(\w{107})$/)
       assert.match(result.id, /^(\w{32})$/)
       assert.match(result.ethAddress, /^0x(\w{40})$/)
       assert.equal(result.source, 'backup')
-      assert.isTrue(result.users.length > 0)
     })
 
     it.skip('should recreate the same backup keychain when using the same seed', async () => {
@@ -73,11 +72,10 @@ describe('BitGo keychain effects', () => {
 
       // then
       // ... should return a BitGo keychain with id, private and public keys etc
-      assert.hasAllKeys(result, ['id', 'pub', 'ethAddress', 'users', 'isBitGo'])
+      assert.hasAllKeys(result, ['id', 'pub', 'ethAddress', 'isBitGo'])
       assert.match(result.pub, /^xpub(\w{107})$/)
       assert.match(result.id, /^(\w{32})$/)
       assert.match(result.ethAddress, /^0x(\w{40})$/)
-      assert.isTrue(result.users.length > 0)
       assert.isTrue(result.isBitGo)
     })
 
@@ -113,28 +111,25 @@ describe('BitGo keychain effects', () => {
 
       // then
       // ... should return an added (uploaded) user keychain with id, private and public keys etc
-      assert.hasAllKeys(userKeychain, ['id', 'pub', 'prv', 'ethAddress', 'users'])
+      assert.hasAllKeys(userKeychain, ['id', 'pub', 'prv', 'ethAddress'])
       assert.match(userKeychain.pub, /^xpub(\w{107})$/)
       assert.match(userKeychain.prv, /^xprv(\w{107})$/)
       assert.match(backupKeychain.id, /^(\w{32})$/)
       assert.match(backupKeychain.ethAddress, /^0x(\w{40})$/)
-      assert.isTrue(backupKeychain.users.length > 0)
 
       // ... should return a backup keychain with private and public keys
-      assert.hasAllKeys(backupKeychain, ['id', 'pub', 'prv', 'ethAddress', 'source', 'users'])
+      assert.hasAllKeys(backupKeychain, ['id', 'pub', 'prv', 'ethAddress', 'source'])
       assert.match(backupKeychain.pub, /^xpub(\w{107})$/)
       assert.match(backupKeychain.prv, /^xprv(\w{107})$/)
       assert.match(backupKeychain.id, /^(\w{32})$/)
       assert.match(backupKeychain.ethAddress, /^0x(\w{40})$/)
       assert.equal(backupKeychain.source, 'backup')
-      assert.isTrue(backupKeychain.users.length > 0)
 
       // ... should return a BitGo keychain with id, private and public keys etc
-      assert.hasAllKeys(bitGoKeychain, ['id', 'pub', 'ethAddress', 'users', 'isBitGo'])
+      assert.hasAllKeys(bitGoKeychain, ['id', 'pub', 'ethAddress', 'isBitGo'])
       assert.match(bitGoKeychain.pub, /^xpub(\w{107})$/)
       assert.match(bitGoKeychain.id, /^(\w{32})$/)
       assert.match(bitGoKeychain.ethAddress, /^0x(\w{40})$/)
-      assert.isTrue(bitGoKeychain.users.length > 0)
       assert.isTrue(bitGoKeychain.isBitGo)
     })
 
@@ -171,13 +166,10 @@ describe('BitGo keychain effects', () => {
       assert.hasAllKeys(result, ['nextBatchPrevId', 'keys', 'limit'])
       assert.equal(result.limit, 123)
       assert.isTrue(result.keys.length > 0)
-      assert.hasAllKeys(result.keys[0], ['id', 'encryptedPrv', 'pub', 'ethAddress', 'users'])
+      assert.hasAllKeys(result.keys[0], ['id', 'pub', 'ethAddress'])
       assert.match(result.keys[0].pub, /^xpub(\w{107})$/)
       assert.match(result.keys[0].id, /^(\w{32})$/)
       assert.match(result.keys[0].ethAddress, /^0x(\w{40})$/)
-      assert.isTrue(result.keys[0].users.length > 0)
-      const encryptedPrv = JSON.parse(result.keys[0].encryptedPrv)
-      assert.hasAllKeys(encryptedPrv, ['iv', 'v', 'iter', 'ks', 'ts', 'mode', 'adata', 'cipher', 'salt', 'ct'])
     })
   })
 
