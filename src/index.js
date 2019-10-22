@@ -1,4 +1,5 @@
 const yargs = require('yargs')
+const R = require('ramda')
 
 const { command: seedCommand } = require('./seed')
 const { command: keychainCommand } = require('./keychain')
@@ -6,7 +7,7 @@ const { command: walletCommand } = require('./wallet')
 const CLIEffects = require('./index.effects')
 const ObjectUtils = require('./common/utils/object.utils')
 
-require('dotenv').config({ path: '.env' }) // eslint-disable-line import/no-extraneous-dependencies
+require('dotenv').config({ path: `${R.propOr('./', 'ENV_PATH', process.env)}.env` }) // eslint-disable-line import/no-extraneous-dependencies
 
 const run = () => {
   const requiredEnvs = [
