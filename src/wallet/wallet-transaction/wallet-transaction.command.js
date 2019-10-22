@@ -5,7 +5,7 @@ const CommandEffects = require('./wallet-transaction.effects')
 // const KeychainCommandEffects = require('../../keychain/keychain-create/keychain-create.effects')
 
 const commandYargs = () => yargs
-  .usage('$0 wallet transact [options]')
+  .usage('$0 wallet tx [options]')
   .positional('toAddress', {
     description: 'Address to transfer Wei to',
     type: 'string',
@@ -27,8 +27,8 @@ const commandYargs = () => yargs
   .alias('h', 'help')
 
 module.exports = [
-  'transact',
-  'transact commands',
+  'tx',
+  'tx commands',
   commandYargs,
   ({ _, verbose }) => {
     const [toAddress, amount] = _.slice(2)
