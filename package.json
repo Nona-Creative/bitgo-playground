@@ -5,9 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "help": "package-json-help.js",
-    "_init:env": "cp .env.local .env && cp .env.test.local .env.test",
-    "init": "npm-run-all _init:env",
+    "init": "make init-envs",
     "lint:js": "eslint --ext .js --ignore-path .gitignore .",
+    "_env:create:local": "make create-env",
     "_test": "mocha \"src/**/*.test.js\" --opts mocha.opts",
     "_test:spec": "npm run _test -- --reporter spec",
     "_test:dot:no-only": "npm run _test:spec -- --reporter dot --forbid-only",
@@ -19,8 +19,9 @@
     "test:e2e": "npm run _test:e2e:spec",
     "test:cov": "nyc --nycrc-path .nycrc npm run _test:dot:no-only",
     "test:e2e:cov": "nyc --nycrc-path .nycrc.e2e npm run _test:e2e:dot:no-only",
+    "_env:tpl:validate": "make _validate-tpl-envs",
     "_git:pre-commit": "npm-run-all lint:js test:cov",
-    "_git:pre-push": "npm-run-all lint:js test:cov test:e2e:cov"
+    "_git:pre-push": "npm-run-all _env:tpl:validate lint:js test:cov test:e2e:cov"
   },
   "keywords": [],
   "author": "Neil Russell <neilrussell6@gmail.com>",
