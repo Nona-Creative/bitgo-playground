@@ -31,11 +31,11 @@ module.exports = [
   'tx commands',
   commandYargs,
   ({ _, verbose }) => {
-    const [toAddress, amount] = _.slice(2)
+    const [toAddress, amount, currency = process.env.BITGO_WALLET_COIN_TYPE] = _.slice(2)
     const id = process.env.BITGO_WALLET_ID
     const prv = process.env.BITGO_WALLET_PRV
     CommandEffects
-      .transactAndLog(id, prv, toAddress, amount, verbose)
+      .transactAndLog(id, prv, toAddress, amount, currency, verbose)
       .then(process.exit)
   },
 ]

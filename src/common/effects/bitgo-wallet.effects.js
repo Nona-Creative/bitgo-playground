@@ -1,4 +1,5 @@
 const R = require('ramda')
+const Bluebird = require('bluebird')
 
 // ----------------------------------------------
 // create BitGo wallet using provided keys
@@ -35,30 +36,75 @@ module.exports.listWallets = R.curry(_listWallets)
 // https://www.bitgo.com/api/v2/#get-wallet
 // ----------------------------------------------
 
-const _getWallet = (id, bitgo) => bitgo
-  .coin('teth')
+const _getWallet = (id, currency, bitgo) => bitgo
+  .coin(currency)
   .wallets()
-  .get({ id })
+  .get({ id, allTokens: true })
 
-module.exports.getWallet = R.curry(_getWallet)
+const getWallet = R.curry(_getWallet)
+module.exports.getWallet = getWallet
+
+// ----------------------------------------------
+// prebuild transaction
+// ----------------------------------------------
+
+const _prebuildTransaction = (address, amount, wallet) => Bluebird
+  .resolve()
+  .then(() => wallet.prebuildTransaction({
+    recipients: [{ address, amount: amount.toString() }],
+  }))
+
+const prebuildTransaction = R.curry(_prebuildTransaction)
+module.exports.prebuildTransaction = prebuildTransaction
+
+// ----------------------------------------------
+// sign transaction
+// ----------------------------------------------
+
+const _signTransaction = (prv, txPrebuild, wallet) => Bluebird
+  .resolve()
+  .then(() => wallet.signTransaction({ txPrebuild, prv }))
+
+const signTransaction = R.curry(_signTransaction)
+module.exports.signTransaction = signTransaction
+
+// ----------------------------------------------
+// submit transaction
+// ----------------------------------------------
+
+const _submitTransaction = (wallet, tx) => Bluebird
+  .resolve(tx)
+  .then(R.ifElse(R.has('halfSigned'), R.identity, R.objOf('halfSigned')))
+  .then(R.assocPath(['halfSigned', 'comment'], 'TX COMMENT'))
+  .then(R.assocPath(['halfSigned', 'gasPrice'], '1000000000'))
+  .then(x => wallet.submitTransaction(x))
+
+const submitTransaction = R.curry(_submitTransaction)
+module.exports.submitTransaction = submitTransaction
+
+// ----------------------------------------------
+// submit transaction
+// ----------------------------------------------
+
+const _getTransaction = (wallet, txHash) => () => Bluebird
+  .resolve(wallet.getTransaction({ txHash }))
+  .catch((e) => {
+    console.error(e.message)
+    return Bluebird.reject(null)
+  })
+
+const getTransaction = R.curry(_getTransaction)
+module.exports.getTransaction = getTransaction
 
 // ----------------------------------------------
 // transact from a BitGo wallet
 // https://www.bitgo.com/api/v2/#list-wallets
 // ----------------------------------------------
 
-const _transact = (walletId, prv, address, amount, bitgo) => (
-  bitgo
-    .coin('teth')
-    .wallets()
-    .get({ id: walletId })
-    .then(wallet => (
-      wallet.prebuildTransaction({
-        recipients: [{ amount: amount.toString(), address }],
-      })
-        .then(txPrebuild => wallet.signTransaction({ txPrebuild, prv }))
-        .then(tx => wallet.submitTransaction(tx))
-    ))
-)
+const _transact = (wallet, prv, currency, address, amount) => Bluebird
+  .resolve(prebuildTransaction(address, amount, wallet)
+    .then(tx => signTransaction(prv, tx, wallet))
+    .then(tx => Bluebird.resolve(submitTransaction(wallet, tx))))
 
-module.exports.transact = R.curry(_transact)
+const transact = R.curry(_transact)
+module.exports.transact = transact
