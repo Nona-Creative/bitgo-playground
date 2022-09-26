@@ -40,7 +40,7 @@
   "dependencies": {
     "bitcore-lib": "^9.0.0",
     "bitcore-mnemonic": "^9.0.0",
-    "bitgo": "^4.43.1",
+    "bitgo": "^14.2.1",
     "bluebird": "^3.5.3",
     "bluebird-retry": "^0.11.0",
     "chalk-pipe": "^2.0.0",
